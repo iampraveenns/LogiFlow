@@ -24,6 +24,8 @@ import { YardManagementView } from './frontend/components/YardManagementView.tsx
 import { FreightAuditBillingView } from './frontend/components/FreightAuditBillingView.tsx';
 import { TradeSanctionsView } from './frontend/components/TradeSanctionsView.tsx';
 import { WavePickingView } from './frontend/components/WavePickingView.tsx';
+import { AirCargoUldView } from './frontend/components/AirCargoUldView.tsx';
+import { DroneLastMileView } from './frontend/components/DroneLastMileView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -156,6 +158,10 @@ export default function App() {
           {currentTab === 'WAVE_PICKING' && <WavePickingView />}
 
           {currentTab === 'ROUTE' && <RouteOptimizerView />}
+          
+          {currentTab === 'AIR_CARGO' && <AirCargoUldView />}
+
+          {currentTab === 'DRONE_LAST_MILE' && <DroneLastMileView />}
 
           {currentTab === 'FORECAST' && (
             <AnalyticsForecastView inventory={inventory} initialSku={forecastTargetSku} />

@@ -22,6 +22,8 @@ import { YardManagementService } from '../services/yardManagementService.ts';
 import { FreightAuditBillingService } from '../services/freightAuditBillingService.ts';
 import { TradeSanctionsService } from '../services/tradeSanctionsService.ts';
 import { WavePickingService } from '../services/wavePickingService.ts';
+import { AirCargoUldService } from '../services/airCargoUldService.ts';
+import { DroneLastMileService } from '../services/droneLastMileService.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -434,4 +436,67 @@ export class ApiController {
     if (!updated) throw new AppError(`Wave '${waveId}' not found`, HTTP_STATUS.NOT_FOUND);
     return updated;
   }
+
+  // ==========================================
+  // 18. AIR CARGO ULD & AIRCRAFT TRIM
+  // ==========================================
+  public static async getUldContainers() {
+    return AirCargoUldService.getUldContainers();
+  }
+
+  public static async calculateAircraftTrim(aircraftModel: string, ulds: any[], fuelKg: number) {
+    return AirCargoUldService.calculateAircraftWeightAndBalance(aircraftModel, ulds, fuelKg);
+  }
+
+  public static async validateHazmatSegregation(classA: string, classB: string) {
+    return AirCargoUldService.validateHazmatSegregation(classA, classB);
+  }
+
+  // ==========================================
+  // 19. DRONE & LAST-MILE ROBOTIC DELIVERY
+  // ==========================================
+  public static async getDroneFleet() {
+    return DroneLastMileService.getDrones();
+  }
+
+  public static async getDroneMissions() {
+    return DroneLastMileService.getMissions();
+  }
+
+  public static async getAirspaceExclusionZones() {
+    return DroneLastMileService.getExclusionZones();
+  }
+
+  public static async dispatchDroneMission(params: {
+    droneId: string;
+    orderId: string;
+    customerName: string;
+    deliveryLat: number;
+    deliveryLng: number;
+    packageWeightKg: number;
+    dropMethod: 'WINCH_TETHER_DROP' | 'GROUND_LAND_PAD' | 'LOCKER_DOCK';
+  }) {
+    const res = DroneLastMileService.dispatchDelivery(
+      params.droneId,
+      params.orderId,
+      params.customerName,
+      params.deliveryLat,
+      params.deliveryLng,
+      params.packageWeightKg,
+      params.dropMethod
+    );
+    if (!res.success) {
+      throw new AppError(res.message, HTTP_STATUS.BAD_REQUEST);
+    }
+    return res;
+  }
+
+  public static async triggerDroneWinch(droneId: string) {
+    return DroneLastMileService.triggerWinchDrop(droneId);
+  }
+
+  public static async triggerDroneEmergencyRth(droneId: string) {
+    return DroneLastMileService.triggerEmergencyRTH(droneId);
+  }
 }
+

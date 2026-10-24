@@ -25,6 +25,8 @@ import {
   FileCheck,
   ShieldAlert,
   Boxes,
+  Plane,
+  Radio,
 } from 'lucide-react';
 
 export type NavTab =
@@ -33,11 +35,13 @@ export type NavTab =
   | 'SHIPMENTS'
   | 'FLEET'
   | 'WAREHOUSE'
-  | 'ROUTE'
   | 'YARD'
   | 'WAVE_PICKING'
-  | 'FORECAST'
+  | 'ROUTE'
+  | 'AIR_CARGO'
+  | 'DRONE_LAST_MILE'
   | 'DIGITAL_TWIN'
+  | 'FORECAST'
   | 'PROCUREMENT'
   | 'COLD_CHAIN'
   | 'MAINTENANCE'
@@ -108,6 +112,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'ROUTE',
       label: 'Route Optimizer (A*)',
       icon: <Route className="h-4 w-4" />,
+    },
+    {
+      id: 'AIR_CARGO',
+      label: 'Air Cargo ULD & Trim',
+      icon: <Plane className="h-4 w-4" />,
+      badge: { text: '% MAC', color: 'bg-sky-500/20 text-sky-300 border-sky-800' },
+    },
+    {
+      id: 'DRONE_LAST_MILE',
+      label: 'Drone & AMR Delivery',
+      icon: <Radio className="h-4 w-4" />,
+      badge: { text: 'PART 107', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
     },
   ];
 
