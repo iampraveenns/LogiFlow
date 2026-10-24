@@ -26,6 +26,10 @@ import { TradeSanctionsView } from './frontend/components/TradeSanctionsView.tsx
 import { WavePickingView } from './frontend/components/WavePickingView.tsx';
 import { AirCargoUldView } from './frontend/components/AirCargoUldView.tsx';
 import { DroneLastMileView } from './frontend/components/DroneLastMileView.tsx';
+import { MaritimeVesselView } from './frontend/components/MaritimeVesselView.tsx';
+import { IntermodalRailView } from './frontend/components/IntermodalRailView.tsx';
+import { CustomsTariffView } from './frontend/components/CustomsTariffView.tsx';
+import { FreightRatingView } from './frontend/components/FreightRatingView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -162,6 +166,14 @@ export default function App() {
           {currentTab === 'AIR_CARGO' && <AirCargoUldView />}
 
           {currentTab === 'DRONE_LAST_MILE' && <DroneLastMileView />}
+
+          {currentTab === 'MARITIME' && <MaritimeVesselView />}
+
+          {currentTab === 'INTERMODAL' && <IntermodalRailView />}
+
+          {currentTab === 'CUSTOMS_TARIFF' && <CustomsTariffView />}
+
+          {currentTab === 'FREIGHT_RATING' && <FreightRatingView />}
 
           {currentTab === 'FORECAST' && (
             <AnalyticsForecastView inventory={inventory} initialSku={forecastTargetSku} />

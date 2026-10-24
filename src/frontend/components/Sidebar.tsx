@@ -27,6 +27,10 @@ import {
   Boxes,
   Plane,
   Radio,
+  Anchor,
+  Train,
+  Globe,
+  Calculator,
 } from 'lucide-react';
 
 export type NavTab =
@@ -40,6 +44,10 @@ export type NavTab =
   | 'ROUTE'
   | 'AIR_CARGO'
   | 'DRONE_LAST_MILE'
+  | 'MARITIME'
+  | 'INTERMODAL'
+  | 'FREIGHT_RATING'
+  | 'CUSTOMS_TARIFF'
   | 'DIGITAL_TWIN'
   | 'FORECAST'
   | 'PROCUREMENT'
@@ -125,9 +133,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <Radio className="h-4 w-4" />,
       badge: { text: 'PART 107', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
     },
+    {
+      id: 'MARITIME',
+      label: 'Maritime & AIS Fleet',
+      icon: <Anchor className="h-4 w-4" />,
+      badge: { text: 'AIS LIVE', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-800' },
+    },
+    {
+      id: 'INTERMODAL',
+      label: 'Intermodal Rail & Yard',
+      icon: <Train className="h-4 w-4" />,
+      badge: { text: '286k GRL', color: 'bg-amber-500/20 text-amber-300 border-amber-800' },
+    },
   ];
 
   const intelligenceItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: { text: string | number; color: string } }[] = [
+    {
+      id: 'FREIGHT_RATING',
+      label: 'Multi-Modal Freight Rater',
+      icon: <Calculator className="h-4 w-4" />,
+      badge: { text: 'NMFC', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
+    },
+    {
+      id: 'CUSTOMS_TARIFF',
+      label: 'Customs HTS & Duty',
+      icon: <Globe className="h-4 w-4" />,
+      badge: { text: 'SEC 301', color: 'bg-red-500/20 text-red-300 border-red-800' },
+    },
     {
       id: 'DIGITAL_TWIN',
       label: 'Digital Twin & Risk',

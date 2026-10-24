@@ -24,6 +24,10 @@ import { TradeSanctionsService } from '../services/tradeSanctionsService.ts';
 import { WavePickingService } from '../services/wavePickingService.ts';
 import { AirCargoUldService } from '../services/airCargoUldService.ts';
 import { DroneLastMileService } from '../services/droneLastMileService.ts';
+import { MaritimeVesselService } from '../services/maritimeVesselService.ts';
+import { IntermodalRailService } from '../services/intermodalRailService.ts';
+import { CustomsTariffEngine } from '../services/customsTariffEngine.ts';
+import { FreightRatingEngine } from '../services/freightRatingEngine.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -497,6 +501,59 @@ export class ApiController {
 
   public static async triggerDroneEmergencyRth(droneId: string) {
     return DroneLastMileService.triggerEmergencyRTH(droneId);
+  }
+
+  // ==========================================
+  // 20. MARITIME NAVIGATION & AIS FLEET
+  // ==========================================
+  public static async getMaritimeVessels() {
+    return MaritimeVesselService.getVessels();
+  }
+
+  public static async calculateBunkerFuel(imo: string, speedKnots: number, transitHours: number) {
+    const vessel = MaritimeVesselService.getVesselByImo(imo);
+    if (!vessel) throw new AppError(`Vessel IMO ${imo} not found`, HTTP_STATUS.NOT_FOUND);
+    return MaritimeVesselService.calculateBunkerConsumption(
+      vessel,
+      speedKnots,
+      transitHours,
+      vessel.currentWeather.beaufortScale
+    );
+  }
+
+  public static async evaluateCanal(canal: 'SUEZ' | 'PANAMA_NEO' | 'PANAMA_PANAMAX', imo: string) {
+    const vessel = MaritimeVesselService.getVesselByImo(imo);
+    if (!vessel) throw new AppError(`Vessel IMO ${imo} not found`, HTTP_STATUS.NOT_FOUND);
+    return MaritimeVesselService.evaluateCanalTransit(canal, vessel);
+  }
+
+  // ==========================================
+  // 21. INTERMODAL RAIL & CLASS I BLOCK TRAINS
+  // ==========================================
+  public static async getIntermodalTrains() {
+    return IntermodalRailService.getUnitTrains();
+  }
+
+  public static async validateDoubleStack(bottom: any, top: any) {
+    return IntermodalRailService.validateDoubleStackPair(bottom, top);
+  }
+
+  // ==========================================
+  // 22. CUSTOMS TARIFF & HTS LANDED COST
+  // ==========================================
+  public static async searchHtsTariffs(query: string) {
+    return CustomsTariffEngine.searchHtsCodes(query);
+  }
+
+  public static async calculateLandedCostDuty(params: any) {
+    return CustomsTariffEngine.calculateLandedCost(params);
+  }
+
+  // ==========================================
+  // 23. MULTI-MODAL FREIGHT RATING
+  // ==========================================
+  public static async getFreightRateQuote(params: any) {
+    return FreightRatingEngine.calculateRateQuote(params);
   }
 }
 
