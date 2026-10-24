@@ -1,0 +1,6 @@
+{
+  "name": "LogiFlow Enterprise",
+  "description": "Enterprise AI-powered Global Logistics & Real-Time Supply Chain Optimization Platform with live telematics, A* route optimization, cold-chain monitoring, and automated customs compliance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
