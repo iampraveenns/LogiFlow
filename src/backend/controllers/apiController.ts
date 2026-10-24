@@ -17,6 +17,11 @@ import { FreightProcurementService } from '../services/freightProcurementService
 import { ColdChainSensorService } from '../services/coldChainSensorService.ts';
 import { FleetMaintenanceService } from '../services/fleetMaintenanceService.ts';
 import { EdiCustomsService } from '../services/ediCustomsService.ts';
+import { EsgDecarbonizationService } from '../services/esgDecarbonizationService.ts';
+import { YardManagementService } from '../services/yardManagementService.ts';
+import { FreightAuditBillingService } from '../services/freightAuditBillingService.ts';
+import { TradeSanctionsService } from '../services/tradeSanctionsService.ts';
+import { WavePickingService } from '../services/wavePickingService.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -318,5 +323,115 @@ export class ApiController {
     weightLbs: number;
   }) {
     return EdiCustomsService.generateEdi204(params);
+  }
+
+  // ==========================================
+  // 13. ESG & CARBON DECARBONIZATION
+  // ==========================================
+  public static async getEsgEmissionsBreakdown() {
+    return EsgDecarbonizationService.getEmissionsBreakdown();
+  }
+
+  public static async getEsgTradeLanes() {
+    return EsgDecarbonizationService.getTradeLaneProfiles();
+  }
+
+  public static async getCarbonOffsets() {
+    return EsgDecarbonizationService.getCarbonOffsets();
+  }
+
+  public static async getDecarbonizationTargets() {
+    return EsgDecarbonizationService.getDecarbonizationTargets();
+  }
+
+  public static async simulateFuelAbatement(params: {
+    conventionalDieselLiters: number;
+    fuelChoice: 'HVO100_RENEWABLE_DIESEL' | 'BIO_LNG' | 'SAF_50_BLEND' | 'BATTERY_ELECTRIC';
+    electricityCarbonIntensityGramsKwh?: number;
+  }) {
+    return EsgDecarbonizationService.simulateFuelAbatement(params);
+  }
+
+  // ==========================================
+  // 14. INTERMODAL RAIL & YARD MANAGEMENT (YMS)
+  // ==========================================
+  public static async getYardDockDoors() {
+    return YardManagementService.getDockDoors();
+  }
+
+  public static async getYardSlots() {
+    return YardManagementService.getYardSlots();
+  }
+
+  public static async getHostlerTasks() {
+    return YardManagementService.getHostlerTasks();
+  }
+
+  public static async getGateOcrTransactions() {
+    return YardManagementService.getGateOcrTransactions();
+  }
+
+  public static async createHostlerTask(params: {
+    trailerNumber: string;
+    fromLocation: string;
+    toLocation: string;
+    priority: 'CRITICAL_DETENTION' | 'SCHEDULED_DOCK' | 'NORMAL_STAGING';
+  }) {
+    return YardManagementService.createHostlerMoveTask(params);
+  }
+
+  public static async toggleDockDoor(doorNumber: number) {
+    return YardManagementService.toggleDockDoorStatus(doorNumber);
+  }
+
+  // ==========================================
+  // 15. FREIGHT BILLING AUDIT & DEMURRAGE
+  // ==========================================
+  public static async getAuditInvoices() {
+    return FreightAuditBillingService.getAuditInvoices();
+  }
+
+  public static async getPortDemurrageClocks() {
+    return FreightAuditBillingService.getDemurrageClocks();
+  }
+
+  public static async submitInvoiceDispute(invoiceId: string, citationNote: string) {
+    const updated = FreightAuditBillingService.submitDisputeClaim(invoiceId, citationNote);
+    if (!updated) throw new AppError(`Invoice '${invoiceId}' not found`, HTTP_STATUS.NOT_FOUND);
+    return updated;
+  }
+
+  // ==========================================
+  // 16. TRADE SANCTIONS & COMPLIANCE
+  // ==========================================
+  public static async screenSanctions(queryName: string) {
+    return TradeSanctionsService.screenParty(queryName);
+  }
+
+  public static async generateSanctionsCertificate(params: {
+    waybillNumber: string;
+    shipper: string;
+    consignee: string;
+    carrierVessel: string;
+    eccn: string;
+  }) {
+    return TradeSanctionsService.generateScreeningCertificate(params);
+  }
+
+  // ==========================================
+  // 17. CROSS-DOCK & WAVE PICKING
+  // ==========================================
+  public static async getPickingWaves() {
+    return WavePickingService.getWaves();
+  }
+
+  public static async getCrossDockMatches() {
+    return WavePickingService.getCrossDockMatches();
+  }
+
+  public static async markWaveItemPicked(waveId: string, sku: string) {
+    const updated = WavePickingService.markItemPicked(waveId, sku);
+    if (!updated) throw new AppError(`Wave '${waveId}' not found`, HTTP_STATUS.NOT_FOUND);
+    return updated;
   }
 }

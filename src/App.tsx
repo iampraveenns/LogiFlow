@@ -19,6 +19,11 @@ import { FreightProcurementView } from './frontend/components/FreightProcurement
 import { ColdChainTelemetryView } from './frontend/components/ColdChainTelemetryView.tsx';
 import { FleetMaintenanceView } from './frontend/components/FleetMaintenanceView.tsx';
 import { EdiCustomsStudioView } from './frontend/components/EdiCustomsStudioView.tsx';
+import { EsgDecarbonizationView } from './frontend/components/EsgDecarbonizationView.tsx';
+import { YardManagementView } from './frontend/components/YardManagementView.tsx';
+import { FreightAuditBillingView } from './frontend/components/FreightAuditBillingView.tsx';
+import { TradeSanctionsView } from './frontend/components/TradeSanctionsView.tsx';
+import { WavePickingView } from './frontend/components/WavePickingView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -146,6 +151,10 @@ export default function App() {
             />
           )}
 
+          {currentTab === 'YARD' && <YardManagementView />}
+
+          {currentTab === 'WAVE_PICKING' && <WavePickingView />}
+
           {currentTab === 'ROUTE' && <RouteOptimizerView />}
 
           {currentTab === 'FORECAST' && (
@@ -154,9 +163,15 @@ export default function App() {
 
           {currentTab === 'DIGITAL_TWIN' && <DigitalTwinView />}
 
+          {currentTab === 'ESG' && <EsgDecarbonizationView />}
+
           {currentTab === 'PROCUREMENT' && <FreightProcurementView />}
 
           {currentTab === 'COLD_CHAIN' && <ColdChainTelemetryView />}
+
+          {currentTab === 'AUDIT_BILLING' && <FreightAuditBillingView />}
+
+          {currentTab === 'SANCTIONS' && <TradeSanctionsView />}
 
           {currentTab === 'MAINTENANCE' && <FleetMaintenanceView />}
 

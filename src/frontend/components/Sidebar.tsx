@@ -20,6 +20,11 @@ import {
   Code2,
   FileCheck2,
   Terminal,
+  Leaf,
+  Grid,
+  FileCheck,
+  ShieldAlert,
+  Boxes,
 } from 'lucide-react';
 
 export type NavTab =
@@ -29,11 +34,16 @@ export type NavTab =
   | 'FLEET'
   | 'WAREHOUSE'
   | 'ROUTE'
+  | 'YARD'
+  | 'WAVE_PICKING'
   | 'FORECAST'
   | 'DIGITAL_TWIN'
   | 'PROCUREMENT'
   | 'COLD_CHAIN'
   | 'MAINTENANCE'
+  | 'ESG'
+  | 'AUDIT_BILLING'
+  | 'SANCTIONS'
   | 'EDI_CUSTOMS'
   | 'COMPLIANCE'
   | 'LOGS';
@@ -84,6 +94,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: lowStockCount > 0 ? { text: `${lowStockCount} LOW`, color: 'bg-amber-500/20 text-amber-300 border-amber-800' } : undefined,
     },
     {
+      id: 'YARD',
+      label: 'Yard & Dock YMS',
+      icon: <Grid className="h-4 w-4" />,
+      badge: { text: '12 DOCKS', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-800' },
+    },
+    {
+      id: 'WAVE_PICKING',
+      label: 'Cross-Dock & Wave Pick',
+      icon: <Boxes className="h-4 w-4" />,
+    },
+    {
       id: 'ROUTE',
       label: 'Route Optimizer (A*)',
       icon: <Route className="h-4 w-4" />,
@@ -96,6 +117,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Digital Twin & Risk',
       icon: <Cpu className="h-4 w-4" />,
       badge: { text: 'VaR 95%', color: 'bg-purple-500/20 text-purple-300 border-purple-800' },
+    },
+    {
+      id: 'ESG',
+      label: 'ESG Carbon Decarb',
+      icon: <Leaf className="h-4 w-4" />,
+      badge: { text: 'GLEC', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
     },
     {
       id: 'FORECAST',
@@ -112,6 +139,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'IoT Cold Chain Hub',
       icon: <Thermometer className="h-4 w-4" />,
       badge: { text: 'MKT GDP', color: 'bg-blue-500/20 text-blue-300 border-blue-800' },
+    },
+    {
+      id: 'AUDIT_BILLING',
+      label: 'Freight 3-Way Audit',
+      icon: <FileCheck className="h-4 w-4" />,
+    },
+    {
+      id: 'SANCTIONS',
+      label: 'Trade Sanctions Screener',
+      icon: <ShieldAlert className="h-4 w-4" />,
+      badge: { text: 'OFAC', color: 'bg-red-500/20 text-red-300 border-red-800' },
     },
     {
       id: 'MAINTENANCE',
@@ -149,7 +187,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-gradient-to-r from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-700/50 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
@@ -182,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-gradient-to-r from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-700/50 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
@@ -212,8 +250,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span className="font-mono text-emerald-400">Monte Carlo 1k</span>
         </div>
         <div className="flex items-center justify-between">
-          <span>Encryption / Standard</span>
-          <span className="font-mono text-cyan-400">ANSI X12 / 21 CFR</span>
+          <span>Standards Compliance</span>
+          <span className="font-mono text-cyan-400">GLEC • ISO 14083 • OFAC</span>
         </div>
       </div>
     </aside>
