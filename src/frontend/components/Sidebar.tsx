@@ -64,6 +64,9 @@ export type NavTab =
   | 'SANCTIONS'
   | 'EDI_CUSTOMS'
   | 'COMPLIANCE'
+  | 'SECURITY_SIEM'
+  | 'COLD_CHAIN_RISK'
+  | 'CARBON_ACCOUNTING'
   | 'LOGS';
 
 interface SidebarProps {
@@ -237,6 +240,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'COMPLIANCE',
       label: 'Customs & BoL Vault',
       icon: <FileCheck2 className="h-4 w-4" />,
+    },
+    {
+      id: 'SECURITY_SIEM',
+      label: 'Zero-Trust SIEM & SOC',
+      icon: <ShieldAlert className="h-4 w-4 text-red-400" />,
+      badge: { text: 'SOC 1', color: 'bg-red-500/20 text-red-300 border-red-800' },
+    },
+    {
+      id: 'COLD_CHAIN_RISK',
+      label: 'GDP Cold Chain Risk',
+      icon: <Thermometer className="h-4 w-4 text-cyan-400" />,
+      badge: { text: 'Arrhenius', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-800' },
+    },
+    {
+      id: 'CARBON_ACCOUNTING',
+      label: 'GLEC ISO 14083 Carbon',
+      icon: <Leaf className="h-4 w-4 text-emerald-400" />,
+      badge: { text: 'EU ETS', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
     },
     {
       id: 'LOGS',

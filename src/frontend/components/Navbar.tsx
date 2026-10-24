@@ -33,6 +33,8 @@ interface NavbarProps {
   onTriggerDisruption: (type: 'HARSH_BRAKING' | 'DTC_FAULT' | 'REEFER_SPIKE' | 'CUSTOMS_HOLD' | 'GEOFENCE_EXIT') => void;
   onOpenTestRunner: () => void;
   onToggleAiCopilot: () => void;
+  onOpenAuthModal?: () => void;
+  jwtExpiresRemaining?: number;
   activeAlerts: string[];
 }
 
@@ -47,6 +49,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onTriggerDisruption,
   onOpenTestRunner,
   onToggleAiCopilot,
+  onOpenAuthModal,
+  jwtExpiresRemaining = 3600,
   activeAlerts,
 }) => {
   return (
@@ -208,6 +212,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             </select>
           </div>
         </div>
+
+        {/* Auth & JWT Button */}
+        {onOpenAuthModal && (
+          <button
+            onClick={onOpenAuthModal}
+            className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2.5 py-1.5 rounded-md flex items-center gap-1.5 font-medium transition shadow-sm"
+            title="Inspect JWT Token, Sign In / Up, or 2FA"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
+            <span className="hidden md:inline font-mono text-[10px] text-emerald-400 bg-emerald-950/60 px-1 py-0.5 rounded border border-emerald-800">
+              JWT {Math.floor(jwtExpiresRemaining / 60)}m
+            </span>
+            <span className="text-xs">Security</span>
+          </button>
+        )}
 
         {/* Test Suite Button */}
         <button

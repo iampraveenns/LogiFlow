@@ -310,3 +310,167 @@ export interface RouteOptimizationResult {
     co2SavedKg: number;
   };
 }
+
+// ==========================================
+// 7. JWT AUTHENTICATION & SECURITY SCHEMAS
+// ==========================================
+export interface JwtClaims {
+  sub: string;             // User ID
+  iss: string;             // Token issuer ('logiflow-auth-authority')
+  aud: string;             // Audience ('logiflow-enterprise-api')
+  exp: number;             // Expiration timestamp (seconds since epoch)
+  nbf: number;             // Not before timestamp
+  iat: number;             // Issued at timestamp
+  jti: string;             // Unique JWT Token Identifier (UUIDv4)
+  role: UserRole;          // User primary role
+  tenantId: string;        // Multi-tenant isolation ID
+  organizationName: string;// Organization label
+  email: string;           // Principal email address
+  name: string;            // Display name
+  permissions: string[];   // RBAC granular privileges
+  mfaVerified: boolean;    // MFA step verification flag
+  sessionId: string;       // Server session identifier
+}
+
+export interface JwtTokenPair {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: 'Bearer';
+  expiresIn: number;       // In seconds (e.g. 3600)
+  claims: JwtClaims;
+}
+
+export interface UserAccountRecord {
+  id: string;
+  email: string;
+  passwordHash: string;
+  salt: string;
+  iterations: number;
+  name: string;
+  role: UserRole;
+  tenantId: string;
+  organizationName: string;
+  avatarUrl: string;
+  mfaEnabled: boolean;
+  mfaSecret?: string;
+  failedLoginAttempts: number;
+  lockedUntil?: number;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SignUpRequest {
+  email: string;
+  password: string;
+  name: string;
+  role: UserRole;
+  tenantId: string;
+  mfaSecret?: string;
+}
+
+export interface SignInRequest {
+  email: string;
+  password: string;
+  tenantId?: string;
+  mfaToken?: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  tokens?: JwtTokenPair;
+  user?: UserSession;
+  mfaRequired?: boolean;
+}
+
+// ==========================================
+// 8. WEBSOCKET LOGISTICS LIVE CHAT TYPES
+// ==========================================
+export type ChatChannelId = 
+  | 'dispatch-ops'
+  | 'vessel-quayside'
+  | 'hazmat-emergency'
+  | 'drivers-fleet'
+  | 'customs-audit'
+  | 'coldchain-alarms';
+
+export interface ChatChannelDefinition {
+  id: ChatChannelId;
+  name: string;
+  description: string;
+  category: 'OPERATIONS' | 'SAFETY' | 'COMPLIANCE' | 'FLEET';
+  allowedRoles: UserRole[];
+  unreadCount?: number;
+  isPrivate?: boolean;
+  iconName: string;
+}
+
+export interface ChatAttachment {
+  type: 'WAYBILL' | 'VEHICLE' | 'GEO_PIN' | 'HAZMAT_GUIDE' | 'INCIDENT_PHOTO';
+  referenceId: string;
+  title: string;
+  summary: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ChatReaction {
+  emoji: string;
+  userId: string;
+  userName: string;
+  timestamp: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  channelId: ChatChannelId;
+  senderId: string;
+  senderName: string;
+  senderRole: UserRole;
+  senderAvatar: string;
+  tenantId: string;
+  content: string;
+  timestamp: string;
+  priority: 'ROUTINE' | 'URGENT' | 'EMERGENCY';
+  attachments?: ChatAttachment[];
+  reactions: ChatReaction[];
+  readBy: {
+    userId: string;
+    readAt: string;
+  }[];
+  digitalSignature?: string;
+}
+
+export interface ChatUserPresence {
+  userId: string;
+  userName: string;
+  userRole: UserRole;
+  avatarUrl: string;
+  tenantId: string;
+  status: 'ONLINE' | 'AWAY' | 'IN_TRANSIT' | 'OFFLINE';
+  activeChannel: ChatChannelId;
+  lastPing: string;
+  isTyping?: boolean;
+}
+
+export type WebSocketClientEvent =
+  | { type: 'chat:auth'; token: string }
+  | { type: 'chat:join_channel'; channelId: ChatChannelId }
+  | { type: 'chat:leave_channel'; channelId: ChatChannelId }
+  | { type: 'chat:send_message'; channelId: ChatChannelId; content: string; priority?: 'ROUTINE' | 'URGENT' | 'EMERGENCY'; attachments?: ChatAttachment[] }
+  | { type: 'chat:add_reaction'; messageId: string; emoji: string }
+  | { type: 'chat:typing'; channelId: ChatChannelId; isTyping: boolean }
+  | { type: 'chat:mark_read'; messageId: string }
+  | { type: 'presence:heartbeat' };
+
+export type WebSocketServerEvent =
+  | { type: 'chat:auth_ack'; success: boolean; user: UserSession; activeChannels: ChatChannelDefinition[] }
+  | { type: 'chat:message'; message: ChatMessage }
+  | { type: 'chat:message_updated'; message: ChatMessage }
+  | { type: 'chat:history'; channelId: ChatChannelId; messages: ChatMessage[] }
+  | { type: 'chat:typing_indicator'; channelId: ChatChannelId; userId: string; userName: string; isTyping: boolean }
+  | { type: 'presence:sync'; onlineUsers: ChatUserPresence[] }
+  | { type: 'presence:user_joined'; presence: ChatUserPresence }
+  | { type: 'presence:user_left'; userId: string; lastSeen: string }
+  | { type: 'system:broadcast'; level: 'INFO' | 'WARNING' | 'CRITICAL'; message: string; timestamp: string };
+

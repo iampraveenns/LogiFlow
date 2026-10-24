@@ -31,6 +31,7 @@ import { FreightRatingEngine } from '../services/freightRatingEngine.ts';
 import { HazmatDangerousGoodsRegistry } from '../services/hazmatDangerousGoodsRegistry.ts';
 import { PortTerminalService } from '../services/portTerminalService.ts';
 import { PharmaStabilityEngine } from '../services/pharmaStabilityEngine.ts';
+import { JwtAuthService } from '../services/jwtAuthService.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -623,5 +624,34 @@ export class ApiController {
   public static async calculateHaynesMkt(readings: number[], activationEnergy?: number) {
     return PharmaStabilityEngine.calculateMeanKineticTemperature(readings, activationEnergy);
   }
+
+  // ==========================================
+  // 27. AUTHENTICATION, JWT & RBAC IDENTITY
+  // ==========================================
+  public static async signIn(req: any) {
+    return JwtAuthService.signIn(req);
+  }
+
+  public static async signUp(req: any) {
+    return JwtAuthService.signUp(req);
+  }
+
+  public static async refreshToken(token: string) {
+    return JwtAuthService.refreshAccessToken(token);
+  }
+
+  public static async logout(token: string) {
+    JwtAuthService.revokeToken(token);
+    return { success: true, message: 'Logged out' };
+  }
+
+  public static async verifyToken(token: string) {
+    return JwtAuthService.verifyJwt(token);
+  }
+
+  public static getDemoUsers() {
+    return JwtAuthService.listAvailableUsers();
+  }
 }
+
 

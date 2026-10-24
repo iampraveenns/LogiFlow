@@ -34,9 +34,14 @@ import { FreightRatingView } from './frontend/components/FreightRatingView.tsx';
 import { HazmatDangerousGoodsView } from './frontend/components/HazmatDangerousGoodsView.tsx';
 import { PharmaStabilityView } from './frontend/components/PharmaStabilityView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
+import { SecurityAuditSiemView } from './frontend/components/SecurityAuditSiemView.tsx';
+import { ColdChainRiskPredictorView } from './frontend/components/ColdChainRiskPredictorView.tsx';
+import { MultiModalCarbonView } from './frontend/components/MultiModalCarbonView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
 import { TestRunnerModal } from './frontend/components/TestRunnerModal.tsx';
+import { AuthModal } from './frontend/components/AuthModal.tsx';
+import { LiveChatDock } from './frontend/components/LiveChatDock.tsx';
 import { useAuth } from './frontend/hooks/useAuth.ts';
 import { useSimulation } from './frontend/hooks/useSimulation.ts';
 
@@ -44,6 +49,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState<NavTab>('MAP');
   const [isAiCopilotOpen, setIsAiCopilotOpen] = useState(false);
   const [isTestRunnerOpen, setIsTestRunnerOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [forecastTargetSku, setForecastTargetSku] = useState<string | undefined>(undefined);
 
   const {
@@ -53,6 +59,13 @@ export default function App() {
     switchRole,
     switchOrganization,
     organizations,
+    rawAccessToken,
+    decodedClaims,
+    secondsUntilTokenExpiry,
+    signInWithCredentials,
+    signUpNewAccount,
+    refreshCurrentToken,
+    signOut,
   } = useAuth();
 
   const {
@@ -100,6 +113,8 @@ export default function App() {
         onTriggerDisruption={triggerDisruption}
         onOpenTestRunner={() => setIsTestRunnerOpen(true)}
         onToggleAiCopilot={() => setIsAiCopilotOpen(!isAiCopilotOpen)}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        jwtExpiresRemaining={secondsUntilTokenExpiry}
         activeAlerts={activeAlerts}
       />
 
@@ -206,6 +221,12 @@ export default function App() {
 
           {currentTab === 'COMPLIANCE' && <ComplianceVaultView waybills={waybills} />}
 
+          {currentTab === 'SECURITY_SIEM' && <SecurityAuditSiemView />}
+
+          {currentTab === 'COLD_CHAIN_RISK' && <ColdChainRiskPredictorView />}
+
+          {currentTab === 'CARBON_ACCOUNTING' && <MultiModalCarbonView />}
+
           {currentTab === 'LOGS' && <AuditLogsView logs={logs} />}
         </main>
       </div>
@@ -222,6 +243,30 @@ export default function App() {
       <TestRunnerModal
         isOpen={isTestRunnerOpen}
         onClose={() => setIsTestRunnerOpen(false)}
+      />
+
+      {/* Auth & JWT Claims Inspector Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        currentRole={currentRole}
+        onSelectRole={switchRole}
+        rawAccessToken={rawAccessToken}
+        decodedClaims={decodedClaims}
+        secondsRemaining={secondsUntilTokenExpiry}
+        organizations={organizations}
+        onRefreshToken={refreshCurrentToken}
+        onSignIn={signInWithCredentials}
+        onSignUp={signUpNewAccount}
+        onSignOut={signOut}
+      />
+
+      {/* Real-Time WebSocket Logistics Live Chat Dock */}
+      <LiveChatDock
+        currentUser={user}
+        rawAccessToken={rawAccessToken}
+        activeWaybillId={selectedVehicle?.activeWaybillId}
+        activeVehicleId={selectedVehicle?.id}
       />
     </div>
   );
