@@ -29,6 +29,8 @@ import { IntermodalRailService } from '../services/intermodalRailService.ts';
 import { CustomsTariffEngine } from '../services/customsTariffEngine.ts';
 import { FreightRatingEngine } from '../services/freightRatingEngine.ts';
 import { HazmatDangerousGoodsRegistry } from '../services/hazmatDangerousGoodsRegistry.ts';
+import { PortTerminalService } from '../services/portTerminalService.ts';
+import { PharmaStabilityEngine } from '../services/pharmaStabilityEngine.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -578,6 +580,48 @@ export class ApiController {
     quantityKg: number
   ) {
     return HazmatDangerousGoodsRegistry.evaluateTransportFeasibility(unNumber, mode, quantityKg);
+  }
+
+  // ==========================================
+  // 25. MARINE PORT TERMINAL & CRANE LOGISTICS
+  // ==========================================
+  public static async getPortBerths() {
+    return PortTerminalService.getBerths();
+  }
+
+  public static async getPortQuayCranes() {
+    return PortTerminalService.getQuayCranes();
+  }
+
+  public static async getPortYardBlocks() {
+    return PortTerminalService.getYardBlocks();
+  }
+
+  public static async evaluatePortBerthAllocation(berthId: string, vessel: any) {
+    return PortTerminalService.evaluateBerthAllocation(berthId, vessel);
+  }
+
+  public static async getPortTerminalMetrics() {
+    return PortTerminalService.getTerminalMetrics();
+  }
+
+  // ==========================================
+  // 26. PHARMA GDP & VACCINE STABILITY
+  // ==========================================
+  public static async getPharmaBatches() {
+    return PharmaStabilityEngine.getBatches();
+  }
+
+  public static async evaluateBatchStability(batchId: string) {
+    const batch = PharmaStabilityEngine.getBatchById(batchId);
+    if (!batch) {
+      throw new AppError(`Pharma batch '${batchId}' not found`, HTTP_STATUS.NOT_FOUND);
+    }
+    return PharmaStabilityEngine.evaluateBatchStability(batch);
+  }
+
+  public static async calculateHaynesMkt(readings: number[], activationEnergy?: number) {
+    return PharmaStabilityEngine.calculateMeanKineticTemperature(readings, activationEnergy);
   }
 }
 

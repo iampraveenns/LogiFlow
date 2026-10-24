@@ -27,10 +27,12 @@ import { WavePickingView } from './frontend/components/WavePickingView.tsx';
 import { AirCargoUldView } from './frontend/components/AirCargoUldView.tsx';
 import { DroneLastMileView } from './frontend/components/DroneLastMileView.tsx';
 import { MaritimeVesselView } from './frontend/components/MaritimeVesselView.tsx';
+import { PortTerminalView } from './frontend/components/PortTerminalView.tsx';
 import { IntermodalRailView } from './frontend/components/IntermodalRailView.tsx';
 import { CustomsTariffView } from './frontend/components/CustomsTariffView.tsx';
 import { FreightRatingView } from './frontend/components/FreightRatingView.tsx';
 import { HazmatDangerousGoodsView } from './frontend/components/HazmatDangerousGoodsView.tsx';
+import { PharmaStabilityView } from './frontend/components/PharmaStabilityView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -170,6 +172,8 @@ export default function App() {
 
           {currentTab === 'MARITIME' && <MaritimeVesselView />}
 
+          {currentTab === 'PORT_TERMINAL' && <PortTerminalView />}
+
           {currentTab === 'INTERMODAL' && <IntermodalRailView />}
 
           {currentTab === 'CUSTOMS_TARIFF' && <CustomsTariffView />}
@@ -177,6 +181,8 @@ export default function App() {
           {currentTab === 'FREIGHT_RATING' && <FreightRatingView />}
 
           {currentTab === 'HAZMAT_REGISTRY' && <HazmatDangerousGoodsView />}
+
+          {currentTab === 'PHARMA_STABILITY' && <PharmaStabilityView />}
 
           {currentTab === 'FORECAST' && (
             <AnalyticsForecastView inventory={inventory} initialSku={forecastTargetSku} />

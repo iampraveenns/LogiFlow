@@ -32,6 +32,8 @@ import {
   Globe,
   Calculator,
   Flame,
+  Ship,
+  Beaker,
 } from 'lucide-react';
 
 export type NavTab =
@@ -46,10 +48,12 @@ export type NavTab =
   | 'AIR_CARGO'
   | 'DRONE_LAST_MILE'
   | 'MARITIME'
+  | 'PORT_TERMINAL'
   | 'INTERMODAL'
   | 'FREIGHT_RATING'
   | 'CUSTOMS_TARIFF'
   | 'HAZMAT_REGISTRY'
+  | 'PHARMA_STABILITY'
   | 'DIGITAL_TWIN'
   | 'FORECAST'
   | 'PROCUREMENT'
@@ -142,6 +146,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: { text: 'AIS LIVE', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-800' },
     },
     {
+      id: 'PORT_TERMINAL',
+      label: 'Marine Port & Cranes',
+      icon: <Ship className="h-4 w-4" />,
+      badge: { text: 'QCASP', color: 'bg-blue-500/20 text-blue-300 border-blue-800' },
+    },
+    {
       id: 'INTERMODAL',
       label: 'Intermodal Rail & Yard',
       icon: <Train className="h-4 w-4" />,
@@ -167,6 +177,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Hazmat & Dangerous Goods',
       icon: <Flame className="h-4 w-4" />,
       badge: { text: 'UN DGR', color: 'bg-red-500/20 text-red-300 border-red-800' },
+    },
+    {
+      id: 'PHARMA_STABILITY',
+      label: 'Pharma GDP Stability',
+      icon: <Beaker className="h-4 w-4" />,
+      badge: { text: 'MKT 83kJ', color: 'bg-teal-500/20 text-teal-300 border-teal-800' },
     },
     {
       id: 'DIGITAL_TWIN',
