@@ -28,6 +28,7 @@ import { MaritimeVesselService } from '../services/maritimeVesselService.ts';
 import { IntermodalRailService } from '../services/intermodalRailService.ts';
 import { CustomsTariffEngine } from '../services/customsTariffEngine.ts';
 import { FreightRatingEngine } from '../services/freightRatingEngine.ts';
+import { HazmatDangerousGoodsRegistry } from '../services/hazmatDangerousGoodsRegistry.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -554,6 +555,29 @@ export class ApiController {
   // ==========================================
   public static async getFreightRateQuote(params: any) {
     return FreightRatingEngine.calculateRateQuote(params);
+  }
+
+  // ==========================================
+  // 24. HAZMAT & DANGEROUS GOODS REGISTRY
+  // ==========================================
+  public static async searchHazmatCatalog(query: string) {
+    return HazmatDangerousGoodsRegistry.search(query);
+  }
+
+  public static async getHazmatMaterial(unNumber: string) {
+    const mat = HazmatDangerousGoodsRegistry.getMaterial(unNumber);
+    if (!mat) {
+      throw new AppError(`UN Number '${unNumber}' not found in registry`, HTTP_STATUS.NOT_FOUND);
+    }
+    return mat;
+  }
+
+  public static async evaluateHazmatTransportFeasibility(
+    unNumber: string,
+    mode: 'AIR_PASSENGER' | 'AIR_CARGO_ONLY' | 'ROAD_TUNNEL' | 'MARITIME_CONTAINER',
+    quantityKg: number
+  ) {
+    return HazmatDangerousGoodsRegistry.evaluateTransportFeasibility(unNumber, mode, quantityKg);
   }
 }
 

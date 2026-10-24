@@ -283,7 +283,7 @@ export class AirCargoUldService {
     // Strict incompatibilities
     const isExplosive = (c: string) => c.startsWith('1');
     const isFlammable = (c: string) => c.startsWith('3') || c.includes('FLAMMABLE');
-    const isLithium = (c: string) => c.startsWith('9') || c.includes('LITHIUM');
+    const isLithium = (c: string) => c.includes('LITHIUM') || c.includes('BATTERY') || c === '9.1';
     const isCorrosive = (c: string) => c.startsWith('8') || c.includes('CORROSIVE');
     const isOxidizer = (c: string) => c.startsWith('5.1');
 

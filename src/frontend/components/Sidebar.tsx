@@ -31,6 +31,7 @@ import {
   Train,
   Globe,
   Calculator,
+  Flame,
 } from 'lucide-react';
 
 export type NavTab =
@@ -48,6 +49,7 @@ export type NavTab =
   | 'INTERMODAL'
   | 'FREIGHT_RATING'
   | 'CUSTOMS_TARIFF'
+  | 'HAZMAT_REGISTRY'
   | 'DIGITAL_TWIN'
   | 'FORECAST'
   | 'PROCUREMENT'
@@ -159,6 +161,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Customs HTS & Duty',
       icon: <Globe className="h-4 w-4" />,
       badge: { text: 'SEC 301', color: 'bg-red-500/20 text-red-300 border-red-800' },
+    },
+    {
+      id: 'HAZMAT_REGISTRY',
+      label: 'Hazmat & Dangerous Goods',
+      icon: <Flame className="h-4 w-4" />,
+      badge: { text: 'UN DGR', color: 'bg-red-500/20 text-red-300 border-red-800' },
     },
     {
       id: 'DIGITAL_TWIN',

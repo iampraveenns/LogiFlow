@@ -30,6 +30,7 @@ import { MaritimeVesselView } from './frontend/components/MaritimeVesselView.tsx
 import { IntermodalRailView } from './frontend/components/IntermodalRailView.tsx';
 import { CustomsTariffView } from './frontend/components/CustomsTariffView.tsx';
 import { FreightRatingView } from './frontend/components/FreightRatingView.tsx';
+import { HazmatDangerousGoodsView } from './frontend/components/HazmatDangerousGoodsView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -174,6 +175,8 @@ export default function App() {
           {currentTab === 'CUSTOMS_TARIFF' && <CustomsTariffView />}
 
           {currentTab === 'FREIGHT_RATING' && <FreightRatingView />}
+
+          {currentTab === 'HAZMAT_REGISTRY' && <HazmatDangerousGoodsView />}
 
           {currentTab === 'FORECAST' && (
             <AnalyticsForecastView inventory={inventory} initialSku={forecastTargetSku} />
