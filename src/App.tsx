@@ -8,11 +8,17 @@ import React, { useState } from 'react';
 import { Navbar } from './frontend/components/Navbar.tsx';
 import { Sidebar, NavTab } from './frontend/components/Sidebar.tsx';
 import { FleetMap } from './frontend/components/FleetMap.tsx';
+import { DispatchBoardView } from './frontend/components/DispatchBoardView.tsx';
 import { ShipmentsView } from './frontend/components/ShipmentsView.tsx';
 import { FleetTelematicsView } from './frontend/components/FleetTelematicsView.tsx';
 import { WarehouseInventoryView } from './frontend/components/WarehouseInventoryView.tsx';
 import { RouteOptimizerView } from './frontend/components/RouteOptimizerView.tsx';
 import { AnalyticsForecastView } from './frontend/components/AnalyticsForecastView.tsx';
+import { DigitalTwinView } from './frontend/components/DigitalTwinView.tsx';
+import { FreightProcurementView } from './frontend/components/FreightProcurementView.tsx';
+import { ColdChainTelemetryView } from './frontend/components/ColdChainTelemetryView.tsx';
+import { FleetMaintenanceView } from './frontend/components/FleetMaintenanceView.tsx';
+import { EdiCustomsStudioView } from './frontend/components/EdiCustomsStudioView.tsx';
 import { ComplianceVaultView } from './frontend/components/ComplianceVaultView.tsx';
 import { AuditLogsView } from './frontend/components/AuditLogsView.tsx';
 import { AiCopilotDrawer } from './frontend/components/AiCopilotDrawer.tsx';
@@ -62,6 +68,10 @@ export default function App() {
     setCurrentTab('FORECAST');
   };
 
+  const handleDispatchLoad = (waybillId: string, vehicleId: string) => {
+    transitionShipment(waybillId, 'DISPATCHED', user.name, `Assigned to vehicle ${vehicleId}`);
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans antialiased">
       {/* Top Navbar */}
@@ -103,6 +113,14 @@ export default function App() {
             />
           )}
 
+          {currentTab === 'DISPATCH' && (
+            <DispatchBoardView
+              waybills={waybills}
+              vehicles={vehicles}
+              onDispatchLoad={handleDispatchLoad}
+            />
+          )}
+
           {currentTab === 'SHIPMENTS' && (
             <ShipmentsView
               waybills={waybills}
@@ -133,6 +151,16 @@ export default function App() {
           {currentTab === 'FORECAST' && (
             <AnalyticsForecastView inventory={inventory} initialSku={forecastTargetSku} />
           )}
+
+          {currentTab === 'DIGITAL_TWIN' && <DigitalTwinView />}
+
+          {currentTab === 'PROCUREMENT' && <FreightProcurementView />}
+
+          {currentTab === 'COLD_CHAIN' && <ColdChainTelemetryView />}
+
+          {currentTab === 'MAINTENANCE' && <FleetMaintenanceView />}
+
+          {currentTab === 'EDI_CUSTOMS' && <EdiCustomsStudioView />}
 
           {currentTab === 'COMPLIANCE' && <ComplianceVaultView waybills={waybills} />}
 

@@ -12,6 +12,11 @@ import { TelematicsService } from '../services/telematicsService.ts';
 import { InventoryForecastService } from '../services/inventoryForecastService.ts';
 import { DocumentComplianceService } from '../services/documentComplianceService.ts';
 import { AILogisticsService } from '../services/aiLogisticsService.ts';
+import { DigitalTwinService, DISRUPTION_SCENARIOS } from '../services/digitalTwinService.ts';
+import { FreightProcurementService } from '../services/freightProcurementService.ts';
+import { ColdChainSensorService } from '../services/coldChainSensorService.ts';
+import { FleetMaintenanceService } from '../services/fleetMaintenanceService.ts';
+import { EdiCustomsService } from '../services/ediCustomsService.ts';
 import { logger } from '../../packages/logger/index.ts';
 import { ShipmentStatus, VehicleType } from '../../packages/shared-types/index.ts';
 import { AppError } from '../middlewares/index.ts';
@@ -234,5 +239,84 @@ export class ApiController {
     }
 
     return { success: true, eventType, timestamp: new Date().toISOString() };
+  }
+
+  // ==========================================
+  // 8. SUPPLY CHAIN DIGITAL TWIN
+  // ==========================================
+  public static async getDisruptionScenarios() {
+    return DISRUPTION_SCENARIOS;
+  }
+
+  public static async runDigitalTwinSimulation(scenarioId: string, iterations: number = 1000) {
+    return DigitalTwinService.runSimulation(scenarioId, iterations);
+  }
+
+  // ==========================================
+  // 9. FREIGHT PROCUREMENT & TENDERS
+  // ==========================================
+  public static async getFreightTenders() {
+    return FreightProcurementService.getTenders();
+  }
+
+  public static async getMarketBenchmarks() {
+    return FreightProcurementService.getMarketBenchmarks();
+  }
+
+  public static async awardFreightTender(tenderId: string, carrierId: string) {
+    const updated = FreightProcurementService.awardTender(tenderId, carrierId);
+    if (!updated) {
+      throw new AppError(`Tender '${tenderId}' not found`, HTTP_STATUS.NOT_FOUND);
+    }
+    return updated;
+  }
+
+  // ==========================================
+  // 10. IOT COLD CHAIN MULTI-SENSOR
+  // ==========================================
+  public static async getColdChainContainers() {
+    return ColdChainSensorService.getContainers();
+  }
+
+  // ==========================================
+  // 11. FLEET MAINTENANCE & PROGNOSTICS
+  // ==========================================
+  public static async getVehicleWearProfile(vehicleId: string) {
+    return FleetMaintenanceService.getVehicleWearProfile(vehicleId);
+  }
+
+  public static async getPredictivePrognosisAlerts() {
+    return FleetMaintenanceService.getPredictivePrognosisAlerts();
+  }
+
+  public static async getMaintenanceWorkOrders() {
+    return FleetMaintenanceService.getWorkOrders();
+  }
+
+  // ==========================================
+  // 12. EDI & CUSTOMS TARIFF STUDIO
+  // ==========================================
+  public static async searchHtsCodes(query: string) {
+    return EdiCustomsService.searchHtsCodes(query);
+  }
+
+  public static async calculateCustomsDuty(params: {
+    hsCode: string;
+    declaredValueUsd: number;
+    originCountry: string;
+    destinationCountry: string;
+    applyFtaPreference?: boolean;
+  }) {
+    return EdiCustomsService.calculateCustomsDuty(params);
+  }
+
+  public static async generateEdi204(params: {
+    waybillNumber: string;
+    carrierScac: string;
+    originCity: string;
+    destinationCity: string;
+    weightLbs: number;
+  }) {
+    return EdiCustomsService.generateEdi204(params);
   }
 }

@@ -7,16 +7,36 @@
 import React from 'react';
 import {
   MapPin,
+  Kanban,
   Package,
   Truck,
   Warehouse,
   Route,
   TrendingUp,
+  Cpu,
+  Briefcase,
+  Thermometer,
+  Wrench,
+  Code2,
   FileCheck2,
   Terminal,
 } from 'lucide-react';
 
-export type NavTab = 'MAP' | 'SHIPMENTS' | 'FLEET' | 'WAREHOUSE' | 'ROUTE' | 'FORECAST' | 'COMPLIANCE' | 'LOGS';
+export type NavTab =
+  | 'MAP'
+  | 'DISPATCH'
+  | 'SHIPMENTS'
+  | 'FLEET'
+  | 'WAREHOUSE'
+  | 'ROUTE'
+  | 'FORECAST'
+  | 'DIGITAL_TWIN'
+  | 'PROCUREMENT'
+  | 'COLD_CHAIN'
+  | 'MAINTENANCE'
+  | 'EDI_CUSTOMS'
+  | 'COMPLIANCE'
+  | 'LOGS';
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -33,11 +53,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   dtcCount,
   lowStockCount,
 }) => {
-  const navItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: { text: string | number; color: string } }[] = [
+  const operationsItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: { text: string | number; color: string } }[] = [
     {
       id: 'MAP',
       label: 'Global Fleet Map',
       icon: <MapPin className="h-4 w-4" />,
+    },
+    {
+      id: 'DISPATCH',
+      label: 'Dispatch Board',
+      icon: <Kanban className="h-4 w-4" />,
+      badge: { text: 'LIVE', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-800' },
     },
     {
       id: 'SHIPMENTS',
@@ -62,10 +88,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Route Optimizer (A*)',
       icon: <Route className="h-4 w-4" />,
     },
+  ];
+
+  const intelligenceItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: { text: string | number; color: string } }[] = [
+    {
+      id: 'DIGITAL_TWIN',
+      label: 'Digital Twin & Risk',
+      icon: <Cpu className="h-4 w-4" />,
+      badge: { text: 'VaR 95%', color: 'bg-purple-500/20 text-purple-300 border-purple-800' },
+    },
     {
       id: 'FORECAST',
-      label: 'Demand Forecasting & ML',
+      label: 'Predictive Demand & ML',
       icon: <TrendingUp className="h-4 w-4" />,
+    },
+    {
+      id: 'PROCUREMENT',
+      label: 'Procurement & Tenders',
+      icon: <Briefcase className="h-4 w-4" />,
+    },
+    {
+      id: 'COLD_CHAIN',
+      label: 'IoT Cold Chain Hub',
+      icon: <Thermometer className="h-4 w-4" />,
+      badge: { text: 'MKT GDP', color: 'bg-blue-500/20 text-blue-300 border-blue-800' },
+    },
+    {
+      id: 'MAINTENANCE',
+      label: 'Fleet Prognostics',
+      icon: <Wrench className="h-4 w-4" />,
+    },
+    {
+      id: 'EDI_CUSTOMS',
+      label: 'EDI X12 & Customs HTS',
+      icon: <Code2 className="h-4 w-4" />,
     },
     {
       id: 'COMPLIANCE',
@@ -80,31 +136,65 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 select-none">
-      <div className="py-4">
-        <div className="px-4 pb-3 mb-2 border-b border-slate-800/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shrink-0 select-none overflow-y-auto">
+      <div className="py-3">
+        {/* Operations Core */}
+        <div className="px-4 pb-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
           Operations Core
         </div>
-        <nav className="space-y-1 px-2">
-          {navItems.map((item) => {
+        <nav className="space-y-0.5 px-2 mb-3">
+          {operationsItems.map((item) => {
             const isActive = currentTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-gradient-to-r from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-700/50 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 truncate">
                   <span className={isActive ? 'text-cyan-400' : 'text-slate-500'}>{item.icon}</span>
-                  <span>{item.label}</span>
+                  <span className="truncate">{item.label}</span>
                 </div>
                 {item.badge && (
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold border ${item.badge.color}`}
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold border shrink-0 ${item.badge.color}`}
+                  >
+                    {item.badge.text}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Intelligence & Analytics */}
+        <div className="px-4 pb-2 pt-2 border-t border-slate-800/80 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+          Intelligence &amp; Governance
+        </div>
+        <nav className="space-y-0.5 px-2">
+          {intelligenceItems.map((item) => {
+            const isActive = currentTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => onSelectTab(item.id)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-gradient-to-r from-cyan-600/30 to-blue-600/20 text-cyan-300 border border-cyan-700/50 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 truncate">
+                  <span className={isActive ? 'text-cyan-400' : 'text-slate-500'}>{item.icon}</span>
+                  <span className="truncate">{item.label}</span>
+                </div>
+                {item.badge && (
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold border shrink-0 ${item.badge.color}`}
                   >
                     {item.badge.text}
                   </span>
@@ -116,14 +206,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* System Status Footnote */}
-      <div className="p-4 border-t border-slate-800 bg-slate-950/60">
-        <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-          <span>Global Latency</span>
-          <span className="font-mono text-emerald-400">18 ms</span>
+      <div className="p-3 border-t border-slate-800 bg-slate-950/60 text-[10px] text-slate-400 space-y-0.5">
+        <div className="flex items-center justify-between">
+          <span>Stochastic Engine</span>
+          <span className="font-mono text-emerald-400">Monte Carlo 1k</span>
         </div>
-        <div className="flex items-center justify-between text-[11px] text-slate-400">
-          <span>Encryption</span>
-          <span className="font-mono text-cyan-400">SHA-256 RSA</span>
+        <div className="flex items-center justify-between">
+          <span>Encryption / Standard</span>
+          <span className="font-mono text-cyan-400">ANSI X12 / 21 CFR</span>
         </div>
       </div>
     </aside>
